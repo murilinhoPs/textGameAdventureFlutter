@@ -1,0 +1,92 @@
+
+[    
+    {
+      "id": 1,
+      "text":
+        "Você acorda na sua barraca e vê um fantasma com uma jarra na mão te encarando.",
+      "options": [
+        {
+          "index": 0,
+          "text": "Você vai até ele e pega a jarra.",
+          "setState": { "jar": true },
+          "nextText": 3
+        },
+        {
+          "index": 1,
+          "text": "Você fica no saco de dormir e se esconde.",
+          "setState": { "jar": false },
+          "nextText": 2
+        },
+        {
+          "index": 2,
+          "text": "Você rasga a cabana e foge.",
+          "setState": { "jar": false },
+          "nextText": 2
+        },
+        {
+          "index": 3,
+          "text": "Pega a jarra mas foge pela entrada.",
+          "setState": { "jar": true },
+          "nextText": 2
+        }
+      ]
+    },
+    
+      {
+        "id": 2,
+        "text":
+          "Você saiu tão apressado que esqueceu o mapa para se localizar na floresta. Nessa hora passa um estranho te oferecendo um mapa.",
+        "options": [
+          {
+            "index": 0,
+            "text": "Você pega o mapa e agradece.",
+            "setState": { "jar": false, "mapa": true },
+            "nextText": 3
+          },
+          {
+            "index": 1,
+            "text": "Pega o mapa, mas sai correndo.",
+            "setState": { "jar": false, "mapa": true },
+            "nextText": 3
+          },
+          {
+            "index": 2,
+            "text": "CORREEEEEEE!!!!",
+            "setState": { "jar": false, "mapa": false },
+            "nextText": 3
+          },
+          {
+            "index": 3,
+            "text": "CORREEEEEEE COM A JARRA, MAS SEM O MAPA!!!!",
+            "requiredState": { "jar": true },
+            "setState": { "jar": true, "mapa": false },
+            "nextText": 3
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "text": "Você acorda do sonho.",
+        "options": [
+          {
+            "index": 0,
+            "text": "Obrigado.",
+            "nextText": 3
+          },
+          {
+            "index": 1,
+            "text": "Por jogar!",
+            "nextText": 3
+          },
+          {
+            "index": 2,
+            "text": "Resetar!",
+            "nextText": 1
+          }
+        ]
+      }
+    ]
+    
+
+  
+  
