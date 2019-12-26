@@ -4,6 +4,7 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:text_adventure_app/model.dart';
+import 'package:video_player/video_player.dart';
 
 void main() => runApp(MyApp());
 
@@ -32,8 +33,10 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   AdventureList history;
 
-  // VideoPlayerController videoPlayer;
+  VideoPlayerController _controller =
+      VideoPlayerController.asset('videos/desert.mp4');
 
+  Future<void> initializeVideo;
   // ChewieController chewieController;
 
   Future<String> _loadAdventureAsset() async {
@@ -51,19 +54,25 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   void initState() {
-    super.initState();
-
     loadProduct();
     nextText = 0;
+    //_controller = VideoPlayerController.asset('videos/desert.mp4');
 
-    // videoPlayer = VideoPlayerController.asset('/videos/Com som.mp4');
+    initialize();
 
-    // chewieController = ChewieController(
-    //   videoPlayerController: videoPlayer,
-    //   aspectRatio: 3 / 2,
-    //   autoPlay: true,
-    //   looping: true,
-    // );
+
+    super.initState();
+  }
+
+  Future<void> initialize() async{
+    await _controller.initialize().then((_) {
+        // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
+        setState(() {
+    _controller.play();
+    _controller.setLooping(true);
+    _controller.setVolume(1.0);
+        });
+      });
   }
 
   void _changeState(int itemIndex) {
@@ -77,13 +86,6 @@ class _MyHomePageState extends State<MyHomePage> {
       }
     });
   }
-
-  // void dispose() {
-  //   super.dispose();
-
-  //   videoPlayer.dispose();
-  //   chewieController.dispose();
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -124,13 +126,14 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
       ),
-      
-        // Center(
-        //   child: Chewie(
-        //     controller: chewieController,
-        //   ),
-        // ),
-      
+      Center(
+        child: _controller.value.initialized
+            ? AspectRatio(
+                aspectRatio: _controller.value.aspectRatio,
+                child: VideoPlayer(_controller),
+              )
+            : Container(),
+      ),
       GridView.count(
           childAspectRatio: MediaQuery.of(context).size.height * 0.0020,
           crossAxisCount: 2,
@@ -156,5 +159,10 @@ class _MyHomePageState extends State<MyHomePage> {
                   : Container()))
               .toList()),
     ]));
+  }
+
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 }
