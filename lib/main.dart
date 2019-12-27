@@ -1,9 +1,10 @@
 import 'dart:async' show Future;
-import 'dart:developer';
-import 'package:flutter/services.dart' show rootBundle;
-import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:text_adventure_app/model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:text_adventure_app/models/model.dart';
+import 'package:text_adventure_app/services/loadJsons.dart';
+import 'package:text_adventure_app/services/playerPrefs.dart';
 import 'package:video_player/video_player.dart';
 
 void main() => runApp(MyApp());
@@ -36,43 +37,17 @@ class _MyHomePageState extends State<MyHomePage> {
   VideoPlayerController _controller =
       VideoPlayerController.asset('videos/desert.mp4');
 
-  Future<void> initializeVideo;
-  // ChewieController chewieController;
-
-  Future<String> _loadAdventureAsset() async {
-    return await rootBundle.loadString('localJson/adventure1.json');
-  }
-
-  Future loadProduct() async {
-    String jsonProduct = await _loadAdventureAsset();
-    final jsonResponse = json.decode(jsonProduct);
-    history = new AdventureList.fromJson(jsonResponse);
-  }
-
   int nextText;
   Map<String, dynamic> choiceState;
 
   @override
   void initState() {
-    loadProduct();
-    nextText = 0;
-    //_controller = VideoPlayerController.asset('videos/desert.mp4');
+    loadJson();
+    readPlayerPrefs();
 
-    initialize();
-
+    if (Platform.isAndroid || Platform.isIOS) initializeVideo();
 
     super.initState();
-  }
-
-  Future<void> initialize() async{
-    await _controller.initialize().then((_) {
-        // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
-        setState(() {
-    _controller.play();
-    _controller.setLooping(true);
-    _controller.setVolume(1.0);
-        });
-      });
   }
 
   void _changeState(int itemIndex) {
@@ -84,6 +59,34 @@ class _MyHomePageState extends State<MyHomePage> {
       } else {
         nextText = 0;
       }
+
+      SaveGame.save(nextText);
+    });
+  }
+
+  void readPlayerPrefs() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    final value = prefs.getInt('nextText') ?? 0;
+
+    print('read: $value');
+
+    nextText = value;
+  }
+
+  Future loadJson() async {
+    await Aventura1Json.loadAdventure1();
+    history = new AdventureList.fromJson(Aventura1Json.jsonResponse);
+  }
+
+  Future<void> initializeVideo() async {
+    await _controller.initialize().then((_) {
+      // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
+      setState(() {
+        _controller.play();
+        _controller.setLooping(true);
+        _controller.setVolume(1.0);
+      });
     });
   }
 
@@ -96,7 +99,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: Center(
         child: FutureBuilder(
-          future: loadProduct(),
+          future: loadJson(),
           builder: (context, snapshot) {
             switch (snapshot.connectionState) {
               case ConnectionState.waiting:

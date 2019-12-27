@@ -70,13 +70,13 @@
         "options": [
           {
             "index": 0,
-            "text": "Obrigado.",
-            "nextText": 3
+            "text": "Obrigado."
+            
           },
           {
             "index": 1,
-            "text": "Por jogar!",
-            "nextText": 3
+            "text": "Por jogar!"
+            
           },
           {
             "index": 2,
