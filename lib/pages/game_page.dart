@@ -6,6 +6,7 @@ import 'package:text_adventure_app/models/model.dart';
 import 'package:text_adventure_app/services/loadJsons.dart';
 import 'package:text_adventure_app/services/playerPrefs.dart';
 import 'package:video_player/video_player.dart';
+import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
