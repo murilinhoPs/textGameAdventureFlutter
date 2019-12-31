@@ -5,14 +5,17 @@ import 'package:text_adventure_app/models/model.dart';
 
 class Aventura1Json{
 
-  static dynamic jsonResponse;
+  AdventureList history;
 
-  static Future<String> loadAdventureAsset1() async {
+   dynamic jsonResponse;
+
+  Future<String> loadAdventureAsset1() async {
     return await rootBundle.loadString('localJson/adventure1.json');
   }
 
-  static Future loadAdventure1() async {
+  Future loadAdventure1() async {
     String jsonProduct = await loadAdventureAsset1();
     jsonResponse = json.decode(jsonProduct);
+    history = AdventureList.fromJson(jsonResponse);
   }
 }

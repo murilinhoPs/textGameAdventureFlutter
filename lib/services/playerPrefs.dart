@@ -1,25 +1,30 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SaveGame {
-  static Future<bool> save(nextText) async {
+
+  int readValue;
+
+  Future<bool> save(nextText) async {
     final prefs = await SharedPreferences.getInstance();
 
     final key = 'nextText';
 
     final value = prefs.setInt(key, nextText);
-    print('save: $value');
+    print('savePrefs: $value');
 
     return value;
   }
 
-  // static Future<int> read() async {
-  //   final prefs = await SharedPreferences.getInstance();
+  Future<int> read() async {
+    final prefs = await SharedPreferences.getInstance();
 
-  //   final key = 'nextText';
+    final key = 'nextText';
 
-  //   final value = prefs.getInt(key) ?? 0;
-  //   print('read: $value');
+    final value = prefs.getInt(key) ?? 0;
+    print('readPrefs: $value');
 
-  //   return value;
-  // }
+    readValue = value;
+
+    return value;
+  }
 }
