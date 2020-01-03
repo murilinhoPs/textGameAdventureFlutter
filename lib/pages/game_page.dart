@@ -136,7 +136,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               ),
                               splashColor: Colors.amber[300],
                               padding: EdgeInsets.all(10),
-                              color: Color.fromRGBO(220, 140, 60, 0.3),
+                              color: Color.fromRGBO(220, 140, 60, 0.4),
                               child: Text(
                                 item.text,
                                 style: TextStyle(

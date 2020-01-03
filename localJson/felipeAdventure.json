@@ -6,19 +6,19 @@
       "options": [
         {
           "index": 0,
-          "text": "Corre e pega sua espada na pequena mochila tiracolo.4",
+          "text": "Corre e pega sua espada na pequena mochila tiracolo.",
           "setState": { "sword": true },
           "nextText": 4
         },
         {
           "index": 1,
-          "text": "Vai investigar o som com uma tocha.3",
+          "text": "Vai investigar o som com uma tocha.",
           "setState": { "sword": false },
           "nextText": 3
         },
         {
           "index": 2,
-          "text": "Pega uma pedra no chão e joga para direção do som.2",
+          "text": "Pega uma pedra no chão e joga para direção do som.",
           "setState": { "sword": false, "fim": true },
           "nextText": 2
         }
@@ -40,7 +40,7 @@
         },
         {
           "index": 2,
-          "text": "Tentar novamente!1",
+          "text": "Tentar novamente!",
           "nextText": 1
         }
       ]
@@ -51,14 +51,14 @@
       "options": [
         {
           "index": 0,
-          "text": "Parar em uma vila próxima para pedir ajuda.6",
+          "text": "Parar em uma vila próxima para pedir ajuda.",
           "setState": { "blood": false },
           "nextText": 6
           
         },
         {
           "index": 1,
-          "text": "Trotar rápido com seu cavalo para chegar até sua vila5",
+          "text": "Trotar rápido com seu cavalo para chegar até sua vila",
           "setState": { "blood": true },
           "nextText": 5
           
