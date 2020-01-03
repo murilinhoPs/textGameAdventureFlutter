@@ -1,0 +1,99 @@
+[    
+    {
+      "id": 1,
+      "text":
+        "Você está sentado(a) em volta de uma fogueira comendo um pedaço duro de carne. \nQuando de repente ouve um barulho vindo das folhagens da escura floresta que te cerca.",
+      "options": [
+        {
+          "index": 0,
+          "text": "Corre e pega sua espada na pequena mochila tiracolo.4",
+          "setState": { "sword": true },
+          "nextText": 4
+        },
+        {
+          "index": 1,
+          "text": "Vai investigar o som com uma tocha.3",
+          "setState": { "sword": false },
+          "nextText": 3
+        },
+        {
+          "index": 2,
+          "text": "Pega uma pedra no chão e joga para direção do som.2",
+          "setState": { "sword": false, "fim": true },
+          "nextText": 2
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "text": "Você ouve um grunido e vê um lobo correndo pela floresta, enquanto carrega seus filhotes para longe do perigo.",
+      "options": [
+        {
+          "index": 0,
+          "text": " [FIM 1].",
+          "requiredState": { "fim": true }
+        },
+        {
+          "index": 1,
+          "text": "Obrigado!"
+          
+        },
+        {
+          "index": 2,
+          "text": "Tentar novamente!1",
+          "nextText": 1
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "text": "Você vê brevemente uma silhueta porém não consegue desviar do ataque de um lobo gigante, que morde seu braço e pega a carne de sua fogueira. \nDepois sumindo na noite em seguida e te deixando com o braço gravemente machucado",
+      "options": [
+        {
+          "index": 0,
+          "text": "Parar em uma vila próxima para pedir ajuda.6",
+          "setState": { "blood": false },
+          "nextText": 6
+          
+        },
+        {
+          "index": 1,
+          "text": "Trotar rápido com seu cavalo para chegar até sua vila5",
+          "setState": { "blood": true },
+          "nextText": 5
+          
+        }
+      ]
+    },
+
+    {
+      "id": 4,
+      "text": "Você pega sua espada bem a tempo de repelir com um golpe a mordida de um terrível lobo gigante e..\nContinua no próximo capítulo ",
+      "options": [
+        {
+          "index": 0,
+          "text": "Resetar",
+          "nextText": 1
+        }
+      ]
+    },
+      {
+        "id": 5,
+        "text": "Você não aguenta os ferimentos em seu braço e desmaia antes de alcançar seu vilarejo [GAME OVER]",
+        "options": [
+
+        ]
+      },
+      {
+        "id": 6,
+        "text": "Você chega até a vila porém ela parece estar deserta. Você começa a sentir muita dor e...  \nContinuar depois",
+        "options": [
+          {
+            "index": 0,
+            "text": "Resetar.",
+            "setState": { "blood": true },
+            "nextText": 1      
+          }
+        ]
+      }
+]

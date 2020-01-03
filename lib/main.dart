@@ -12,18 +12,15 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<TextState>.value(value: TextState()),
+        ChangeNotifierProvider<ChoiceState>.value(
+          value: ChoiceState(),
+        ),
       ],
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
         theme: ThemeData(
-          appBarTheme: AppBarTheme(
-            elevation: 0,
-            color: Colors.transparent,
-          ),
-         // scaffoldBackgroundColor: Colors.amber[300],
-          brightness: Brightness.dark,
-          buttonColor: Colors.blueGrey[700],//Colors.orange[700],
-          
+          brightness: Brightness.light,
         ),
         home: MyHomePage(title: 'Text Adventure Demo'),
       ),

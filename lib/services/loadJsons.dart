@@ -10,7 +10,7 @@ class Aventura1Json{
    dynamic jsonResponse;
 
   Future<String> loadAdventureAsset1() async {
-    return await rootBundle.loadString('localJson/adventure1.json');
+    return await rootBundle.loadString('localJson/felipeAdventure.json');
   }
 
   Future loadAdventure1() async {

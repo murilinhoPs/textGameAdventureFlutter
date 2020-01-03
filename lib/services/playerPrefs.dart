@@ -1,7 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SaveGame {
-
   int readValue;
 
   Future<bool> save(nextText) async {
@@ -26,5 +25,11 @@ class SaveGame {
     readValue = value;
 
     return value;
+  }
+
+  Future<void> clearPrefs() async {
+    final preferences = await SharedPreferences.getInstance();
+
+    preferences.clear();
   }
 }
