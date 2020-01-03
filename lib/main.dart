@@ -10,14 +10,20 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: 
-      [
-        ChangeNotifierProvider<TextState>.value( value: TextState()),
+      providers: [
+        ChangeNotifierProvider<TextState>.value(value: TextState()),
       ],
       child: MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(
-          primarySwatch: Colors.blue,
+          appBarTheme: AppBarTheme(
+            elevation: 0,
+            color: Colors.transparent,
+          ),
+         // scaffoldBackgroundColor: Colors.amber[300],
+          brightness: Brightness.dark,
+          buttonColor: Colors.blueGrey[700],//Colors.orange[700],
+          
         ),
         home: MyHomePage(title: 'Text Adventure Demo'),
       ),

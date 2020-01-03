@@ -1,5 +1,6 @@
 import 'dart:async' show Future;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:text_adventure_app/bloc/text_state_bloc.dart';
 import 'package:text_adventure_app/models/model.dart';
@@ -89,7 +90,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[200],
+      //backgroundColor: Colors.grey[200],
       appBar: AppBar(
         title: Text(widget.title),
       ),
@@ -104,7 +105,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 return CircularProgressIndicator();
                 break;
               case ConnectionState.done:
-                return Card(elevation: 5, child: aventura1(context));
+                return aventura1(context);
                 break;
             }
           },
@@ -114,11 +115,9 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget aventura1(BuildContext context) {
-
     return Consumer<TextState>(
       builder: (context, textState, widget) {
-        return 
-        ListView(
+        return ListView(
           children: <Widget>[
             Container(
               padding: EdgeInsets.all(8),
@@ -139,26 +138,35 @@ class _MyHomePageState extends State<MyHomePage> {
                   : Container(),
             ),
             GridView.count(
-                controller: null,
-                physics: null,
                 primary: false,
+                physics: null,
                 childAspectRatio: MediaQuery.of(context).size.height * 0.0020,
                 crossAxisCount: 2,
                 shrinkWrap: true,
                 crossAxisSpacing: 20,
                 mainAxisSpacing: 30,
-                padding: EdgeInsets.all(15.0),
+                padding: EdgeInsets.all(30.0),
                 children: _history.adventure[(textState.nextText)].options
                     .map((item) => (item.requiredState == null ||
                             item.requiredState.toString() ==
                                 choiceState.toString()
                         ? RaisedButton(
-                            color: Colors.amber[200],
+                            shape: BeveledRectangleBorder(
+                              side: BorderSide(color: Colors.amber[900]),
+                              borderRadius: BorderRadius.all(
+                                Radius.elliptical(10, 7),
+                              ),
+                            ),
+                            //color: Colors.orange[700],
+                            splashColor: Colors.grey[800],
+                            highlightColor: Colors.blue[800],
                             padding: EdgeInsets.all(10),
                             elevation: 5,
                             child: Text(
                               item.text,
-                              style: TextStyle(fontSize: 16),
+                              style: TextStyle(
+                                fontSize: 16,
+                              ),
                             ),
                             onPressed: () {
                               _changeState(item.index);
