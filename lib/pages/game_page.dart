@@ -1,9 +1,12 @@
 import 'dart:async' show Future;
 import 'package:flutter/material.dart';
+
+import 'package:text_adventure_app/bloc/text_state_bloc.dart';
 import 'package:text_adventure_app/models/model.dart';
 import 'package:text_adventure_app/services/loadJsons.dart';
 import 'package:text_adventure_app/services/playerPrefs.dart';
 import 'package:video_player/video_player.dart';
+import 'package:provider/provider.dart';
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
@@ -22,7 +25,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   final SaveGame playerPrefs = SaveGame();
 
-  int nextText;
+  //int nextText = 0;
   Map<String, dynamic> choiceState;
 
   @override
@@ -41,6 +44,15 @@ class _MyHomePageState extends State<MyHomePage> {
     _history = jsonHistory.history;
   }
 
+  Future<void> readPlayerPrefs() async {
+    TextState textBloc = Provider.of<TextState>(context, listen: false);
+
+    await playerPrefs.read();
+
+    textBloc.setNextText(playerPrefs.readValue);
+    print("textBloc test: " + textBloc.nextText.toString());
+  }
+
   Future<void> initializeVideo() async {
     await _controller.initialize().then((_) {
       // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
@@ -52,22 +64,25 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  Future<void> readPlayerPrefs() async {
-    await playerPrefs.read();
-
-    nextText = playerPrefs.readValue;
-  }
-
+  // O QUE MUDA O ESTADO
   void _changeState(int itemIndex) {
-    setState(() {
-      choiceState = _history.adventure[nextText].options[itemIndex].setState;
+    TextState textBloc = Provider.of<TextState>(context, listen: false);
 
-      if (nextText < _history.adventure.length) {
-        nextText = _history.adventure[nextText].options[itemIndex].nextText - 1;
+    setState(() {
+      choiceState =
+          _history.adventure[textBloc.nextText].options[itemIndex].setState;
+
+      if (textBloc.nextText < _history.adventure.length) {
+        // MUDANDO o nextText
+        textBloc.setNextText(
+            _history.adventure[textBloc.nextText].options[itemIndex].nextText -
+                1);
       } else {
-        nextText = 0;
+        // MUDANDO o nextText
+        textBloc.setNextText(0);
       }
-      playerPrefs.save(nextText);
+      // SALVANDO o nextText
+      playerPrefs.save(textBloc.nextText);
     });
   }
 
@@ -99,54 +114,63 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget aventura1(BuildContext context) {
-    return (ListView(children: <Widget>[
-      Container(
-        padding: EdgeInsets.all(8),
-        margin: EdgeInsets.only(top: 10),
-        child: Text(
-          _history.adventure[(nextText)].text,
-          style: TextStyle(
-            fontSize: 20,
-          ),
-        ),
-      ),
-      Center(
-        child: _controller.value.initialized
-            ? AspectRatio(
-                aspectRatio: _controller.value.aspectRatio,
-                child: VideoPlayer(_controller),
-              )
-            : Container(),
-      ),
-      GridView.count(
 
-          controller: null,
-          physics: null,
-          primary: false,
-          childAspectRatio: MediaQuery.of(context).size.height * 0.0020,
-          crossAxisCount: 2,
-          shrinkWrap: true,
-          crossAxisSpacing: 20,
-          mainAxisSpacing: 30,
-          padding: EdgeInsets.all(15.0),
-          children: _history.adventure[(nextText)].options
-              .map((item) => (item.requiredState == null ||
-                      item.requiredState.toString() == choiceState.toString()
-                  ? RaisedButton(
-                      color: Colors.amber[200],
-                      padding: EdgeInsets.all(10),
-                      elevation: 5,
-                      child: Text(
-                        item.text,
-                        style: TextStyle(fontSize: 16),
-                      ),
-                      onPressed: () {
-                        _changeState(item.index);
-                      },
+    return Consumer<TextState>(
+      builder: (context, textState, widget) {
+        return 
+        ListView(
+          children: <Widget>[
+            Container(
+              padding: EdgeInsets.all(8),
+              margin: EdgeInsets.only(top: 10),
+              child: Text(
+                _history.adventure[(textState.nextText)].text,
+                style: TextStyle(
+                  fontSize: 20,
+                ),
+              ),
+            ),
+            Center(
+              child: _controller.value.initialized
+                  ? AspectRatio(
+                      aspectRatio: _controller.value.aspectRatio,
+                      child: VideoPlayer(_controller),
                     )
-                  : Container()))
-              .toList()),
-    ]));
+                  : Container(),
+            ),
+            GridView.count(
+                controller: null,
+                physics: null,
+                primary: false,
+                childAspectRatio: MediaQuery.of(context).size.height * 0.0020,
+                crossAxisCount: 2,
+                shrinkWrap: true,
+                crossAxisSpacing: 20,
+                mainAxisSpacing: 30,
+                padding: EdgeInsets.all(15.0),
+                children: _history.adventure[(textState.nextText)].options
+                    .map((item) => (item.requiredState == null ||
+                            item.requiredState.toString() ==
+                                choiceState.toString()
+                        ? RaisedButton(
+                            color: Colors.amber[200],
+                            padding: EdgeInsets.all(10),
+                            elevation: 5,
+                            child: Text(
+                              item.text,
+                              style: TextStyle(fontSize: 16),
+                            ),
+                            onPressed: () {
+                              _changeState(item.index);
+                              print(textState.nextText);
+                            },
+                          )
+                        : Container()))
+                    .toList()),
+          ],
+        );
+      },
+    );
   }
 
   void dispose() {
