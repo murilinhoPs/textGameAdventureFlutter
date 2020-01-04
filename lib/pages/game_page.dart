@@ -21,14 +21,16 @@ class _MyHomePageState extends State<MyHomePage> {
 
   final SaveGame playerPrefs = SaveGame();
 
+  Future<void> initialize() async {
+    //if (Platform.isAndroid || Platform.isIOS )
+    await videosControllers.initializeVideo();
+    await jsonHistory.loadAdventure1();
+    AdventureBloc.readPlayerPrefs(context);
+  }
+
   @override
   void initState() {
-    jsonHistory.loadAdventure1();
-    AdventureBloc.readPlayerPrefs(context);
-
-    //if (Platform.isAndroid || Platform.isIOS )
-    videosControllers.initializeVideo();
-
+    initialize();
     super.initState();
   }
 
@@ -53,9 +55,9 @@ class _MyHomePageState extends State<MyHomePage> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
                   Text('clear game data'),
-                  Container(width: 50,
+                  Container(
+                    width: 50,
                     child: FlatButton(
-
                       padding: EdgeInsets.all(0),
                       child: Icon(Icons.clear),
                       onPressed: () => playerPrefs.clearPrefs(),
@@ -140,9 +142,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               child: Text(
                                 item.text,
                                 style: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.grey[850]
-                                ),
+                                    fontSize: 16, color: Colors.grey[850]),
                               ),
                               onPressed: () {
                                 AdventureBloc.changeAdventureState(
