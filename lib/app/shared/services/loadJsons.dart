@@ -1,13 +1,12 @@
 import 'dart:convert';
 
 import 'package:flutter/services.dart' show rootBundle;
-import 'package:text_adventure_app/models/model.dart';
+import 'package:text_adventure_app/app/shared/models/model.dart';
 
-class Aventura1Json{
-
+class Aventura1Json {
   AdventureList history;
 
-   dynamic jsonResponse;
+  dynamic jsonResponse;
 
   Future<String> loadAdventureAsset1() async {
     return await rootBundle.loadString('localJson/felipeAdventure.json');

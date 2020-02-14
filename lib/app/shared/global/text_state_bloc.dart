@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:text_adventure_app/models/model.dart';
-import 'package:text_adventure_app/services/playerPrefs.dart';
+import 'package:text_adventure_app/app/shared/models/model.dart';
+import 'package:text_adventure_app/app/shared/services/playerPrefs.dart';
 
 class TextState extends ChangeNotifier {
   int _nextText = 0;
@@ -39,7 +39,8 @@ class AdventureBloc {
     print("textBloc test: " + textBloc.nextText.toString());
   }
 
-  static void changeAdventureState(BuildContext context, AdventureList history, int itemIndex) {
+  static void changeAdventureState(
+      BuildContext context, AdventureList history, int itemIndex) {
     TextState textBloc = Provider.of<TextState>(context, listen: false);
     ChoiceState choiceBloc = Provider.of<ChoiceState>(context, listen: false);
 
