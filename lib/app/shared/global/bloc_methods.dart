@@ -6,17 +6,17 @@ import 'package:text_adventure_app/app/shared/services/playerPrefs.dart';
 import '../../app_module.dart';
 
 class BlocMethods {
-  final SaveGame playerPrefs = SaveGame();
+  static final SaveGame _playerPrefs = SaveGame();
 
-  final appBloc = AppModule.to.bloc<AppBloc>();
+  static final appBloc = AppModule.to.bloc<AppBloc>();
 
-  Future<void> readPlayerPrefs(BuildContext context) async {
-    await playerPrefs.read();
+   static Future<void>  readPlayerPrefs(BuildContext context) async {
+    await _playerPrefs.read();
 
-    appBloc.setNextText(playerPrefs.readValue);
+    appBloc.setNextText(_playerPrefs.readValue);
   }
 
-  void changeAdventureState(
+  static void changeAdventureState(
       BuildContext context, AdventureList history, int itemIndex) {
     appBloc.setChoiceState(
         history.adventure[appBloc.nextValue].options[itemIndex].setState);
@@ -26,10 +26,10 @@ class BlocMethods {
       appBloc.setNextText(
           history.adventure[appBloc.nextValue].options[itemIndex].nextText - 1);
     } else {
-      // MUDANDO o nextText
+      // MUDANDO o nextTextAdventureBloc
       appBloc.setNextText(0);
     }
     // SALVANDO o nextText
-    playerPrefs.save(appBloc.nextText);
+    _playerPrefs.save(appBloc.nextValue);
   }
 }

@@ -20,7 +20,7 @@ class AppBloc extends BlocBase {
 
   Map<String, dynamic> get choiceValue => _choice$.value;
 
-  Stream<Map<String, dynamic>> get choiceState => _choice$.stream;
+  Stream<Map<String, dynamic>> get choiceState => _choice$.stream; 
 
   void setChoiceState(Map<String, dynamic> map) {
     _choiceState = map;

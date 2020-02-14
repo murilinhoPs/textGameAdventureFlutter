@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:text_adventure_app/app/shared/global/app_bloc.dart';
-import 'package:text_adventure_app/app/shared/global/text_state_bloc.dart';
+import 'package:text_adventure_app/app/shared/global/bloc_methods.dart';
 import 'package:text_adventure_app/app/shared/services/loadJsons.dart';
 import 'package:text_adventure_app/app/shared/services/loadVideo.dart';
 import 'package:text_adventure_app/app/shared/services/playerPrefs.dart';
 import 'package:video_player/video_player.dart';
-import 'package:provider/provider.dart';
-
 import '../app_module.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -26,9 +25,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<void> initialize() async {
     //if (Platform.isAndroid || Platform.isIOS )
-    await videosControllers.initializeVideo();
+    //
     await jsonHistory.loadAdventure1();
-    AdventureBloc.readPlayerPrefs(context);
+    await videosControllers.initializeVideo();
+    await BlocMethods.readPlayerPrefs(context);
   }
 
   @override
@@ -38,22 +38,29 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   @override
+  void dispose() {
+    videosControllers.controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color.fromRGBO(211, 195, 171, 1),
       body: Center(
         child: SafeArea(
           child: Stack(
             textDirection: TextDirection.rtl,
             children: <Widget>[
-              Container(
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: NetworkImage(
-                        "https://images-americanas.b2w.io/produtos/01/00/sku/43782/4/43782401_2SZ.jpg"),
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
+              // Container(
+              //   decoration: BoxDecoration(
+              //     // image: DecorationImage(
+              //     //   image: NetworkImage(
+              //     //       "https://images-americanas.b2w.io/produtos/01/00/sku/43782/4/43782401_2SZ.jpg"),
+              //     //   fit: BoxFit.cover,
+              //     // ),
+              //   ),
+              // ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
@@ -95,84 +102,99 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Widget aventura1(BuildContext context) {
     return StreamBuilder<int>(
+      stream: AppModule.to.bloc<AppBloc>().nextText,
       builder: (context, snapshot) {
-        return StreamBuilder<Map<String, dynamic>>(
-            stream: AppModule.to.bloc<AppBloc>().choiceState,
-            builder: (context, snapshot) {
-              return ListView(
+        return  Column(
+          children: <Widget>[
+            Container(
+              child: ListView(
+                shrinkWrap: true,
                 children: <Widget>[
                   Container(
-                    padding: EdgeInsets.all(8),
+                    padding: EdgeInsets.all(10),
                     margin: EdgeInsets.only(top: 10),
-                    child: Text(
+                    child: SelectableText(
                       jsonHistory.history.adventure[(snapshot.data)].text,
                       style: TextStyle(
-                        fontSize: 20,
+                        fontSize: 17,
                       ),
                     ),
                   ),
-                  Center(
-                    child: videosControllers.controller.value.initialized
-                        ? AspectRatio(
-                            aspectRatio:
-                                videosControllers.controller.value.aspectRatio,
-                            child: VideoPlayer(videosControllers.controller),
-                          )
-                        : Container(),
+                  Padding(
+                    padding: EdgeInsets.all(15),
+                    child: Center(
+                      child: videosControllers.controller.value.initialized
+                          ? AspectRatio(
+                              aspectRatio: videosControllers
+                                  .controller.value.aspectRatio,
+                              child: VideoPlayer(
+                                videosControllers.controller,
+                              ),
+                            )
+                          : Container(),
+                    ),
                   ),
-                  GridView.count(
-                      primary: false,
-                      physics: null,
-                      childAspectRatio:
-                          MediaQuery.of(context).size.height * 0.0020,
-                      crossAxisCount: 2,
-                      shrinkWrap: true,
-                      crossAxisSpacing: 20,
-                      mainAxisSpacing: 30,
-                      padding: EdgeInsets.all(30.0),
-                      children: jsonHistory
-                          .history.adventure[(snapshot.data)].options
-                          .map(
-                            (item) => (item.requiredState == null ||
-                                    item.requiredState.toString() ==
-                                        snapshot.data.toString()
-                                ? FlatButton(
-                                    shape: BeveledRectangleBorder(
-                                      side:
-                                          BorderSide(color: Colors.amber[600]),
-                                      borderRadius: BorderRadius.all(
-                                        Radius.elliptical(10, 7),
-                                      ),
-                                    ),
-                                    splashColor: Colors.amber[300],
-                                    padding: EdgeInsets.all(10),
-                                    color: Color.fromRGBO(220, 140, 60, 0.4),
-                                    child: Text(
-                                      item.text,
-                                      style: TextStyle(
-                                          fontSize: 16,
-                                          color: Colors.grey[850]),
-                                    ),
-                                    onPressed: () {
-                                      AdventureBloc.changeAdventureState(
-                                          context,
-                                          jsonHistory.history,
-                                          item.index);
-                                      print(textState.nextText);
-                                    },
-                                  )
-                                : Container()),
-                          )
-                          .toList()),
                 ],
-              );
-            });
+              ),
+            ),
+            StreamBuilder<Map<String, dynamic>>(
+                stream: AppModule.to.bloc<AppBloc>().choiceState,
+                builder: (context, snapshot) {
+                  return Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child:  
+                        GridView.count(
+
+                        primary: false,
+                        physics: null,
+                        childAspectRatio:
+                            MediaQuery.of(context).size.height * 0.00991,
+                        crossAxisCount: 1,
+                        shrinkWrap: true,
+                        // crossAxisSpacing: 20,
+                         mainAxisSpacing: 0,
+                        children: jsonHistory
+                            .history
+                            .adventure[(AppModule.to.bloc<AppBloc>().nextValue)]
+                            .options
+                            .map(
+                              (item) => (item.requiredState == null ||
+                                      item.requiredState.toString() ==
+                                          snapshot.data.toString()
+                                  ? FlatButton(
+                                      shape:  RoundedRectangleBorder(
+                                        side:
+                                            BorderSide(color: Colors.black),
+                                        //   borderRadius: BorderRadius.only(
+                                        //   topLeft: Radius.circular(8),
+
+                                        //  ),
+                                      ),
+                                      splashColor: Colors.amber[300],
+                                      padding: EdgeInsets.all(10),
+                                      //color: Color.fromRGBO(220, 140, 60, 1),
+                                      child: Text(
+                                        item.text,
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            color: Colors.grey[850]),
+                                      ),
+                                      onPressed: () {
+                                        BlocMethods.changeAdventureState(context,
+                                            jsonHistory.history, item.index);
+                                        print(AppModule.to
+                                            .bloc<AppBloc>()
+                                            .nextText);
+                                      },
+                                    )
+                                  : Container()),
+                            )
+                            .toList()),
+                  );
+                }),
+          ],
+        );
       },
     );
-  }
-
-  void dispose() {
-    videosControllers.controller.dispose();
-    super.dispose();
   }
 }
