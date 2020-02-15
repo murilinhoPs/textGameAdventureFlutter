@@ -24,8 +24,6 @@ class _MyHomePageState extends State<MyHomePage> {
   final SaveGame playerPrefs = SaveGame();
 
   Future<void> initialize() async {
-    //if (Platform.isAndroid || Platform.isIOS )
-    //
     await jsonHistory.loadAdventure1();
     await videosControllers.initializeVideo();
     await BlocMethods.readPlayerPrefs(context);
@@ -52,15 +50,6 @@ class _MyHomePageState extends State<MyHomePage> {
           child: Stack(
             textDirection: TextDirection.rtl,
             children: <Widget>[
-              // Container(
-              //   decoration: BoxDecoration(
-              //     // image: DecorationImage(
-              //     //   image: NetworkImage(
-              //     //       "https://images-americanas.b2w.io/produtos/01/00/sku/43782/4/43782401_2SZ.jpg"),
-              //     //   fit: BoxFit.cover,
-              //     // ),
-              //   ),
-              // ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
@@ -100,11 +89,12 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+// Pega os valores do bloc, quem modifica são os Bloc Methods
   Widget aventura1(BuildContext context) {
     return StreamBuilder<int>(
       stream: AppModule.to.bloc<AppBloc>().nextText,
       builder: (context, snapshot) {
-        return  Column(
+        return Column(
           children: <Widget>[
             Container(
               child: ListView(
@@ -142,9 +132,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 builder: (context, snapshot) {
                   return Padding(
                     padding: const EdgeInsets.all(10.0),
-                    child:  
-                        GridView.count(
-
+                    child: GridView.count(
                         primary: false,
                         physics: null,
                         childAspectRatio:
@@ -152,43 +140,32 @@ class _MyHomePageState extends State<MyHomePage> {
                         crossAxisCount: 1,
                         shrinkWrap: true,
                         // crossAxisSpacing: 20,
-                         mainAxisSpacing: 0,
+                        mainAxisSpacing: 0,
                         children: jsonHistory
                             .history
                             .adventure[(AppModule.to.bloc<AppBloc>().nextValue)]
                             .options
-                            .map(
-                              (item) => (item.requiredState == null ||
-                                      item.requiredState.toString() ==
-                                          snapshot.data.toString()
-                                  ? FlatButton(
-                                      shape:  RoundedRectangleBorder(
-                                        side:
-                                            BorderSide(color: Colors.black),
-                                        //   borderRadius: BorderRadius.only(
-                                        //   topLeft: Radius.circular(8),
-
-                                        //  ),
-                                      ),
-                                      splashColor: Colors.amber[300],
-                                      padding: EdgeInsets.all(10),
-                                      //color: Color.fromRGBO(220, 140, 60, 1),
-                                      child: Text(
-                                        item.text,
-                                        style: TextStyle(
-                                            fontSize: 16,
-                                            color: Colors.grey[850]),
-                                      ),
-                                      onPressed: () {
-                                        BlocMethods.changeAdventureState(context,
-                                            jsonHistory.history, item.index);
-                                        print(AppModule.to
-                                            .bloc<AppBloc>()
-                                            .nextText);
-                                      },
-                                    )
-                                  : Container()),
-                            )
+                            .map((item) => (item.requiredState == null ||
+                                    item.requiredState.toString() ==
+                                        snapshot.data.toString()
+                                ? FlatButton(
+                                    shape: RoundedRectangleBorder(
+                                      side: BorderSide(color: Colors.black),
+                                    ),
+                                    splashColor: Colors.amber[300],
+                                    padding: EdgeInsets.all(10),
+                                    child: Text(
+                                      item.text,
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          color: Colors.grey[850]),
+                                    ),
+                                    onPressed: () {
+                                      BlocMethods.changeAdventureState(context,
+                                          jsonHistory.history, item.index);
+                                    },
+                                  )
+                                : Container()))
                             .toList()),
                   );
                 }),
@@ -198,3 +175,13 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
+
+// Container(
+//   decoration: BoxDecoration(
+//     // image: DecorationImage(
+//     //   image: NetworkImage(
+//     //       "https://images-americanas.b2w.io/produtos/01/00/sku/43782/4/43782401_2SZ.jpg"),
+//     //   fit: BoxFit.cover,
+//     // ),
+//   ),
+// ),

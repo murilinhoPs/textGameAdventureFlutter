@@ -2,6 +2,9 @@ import 'package:rxdart/rxdart.dart';
 import 'package:bloc_pattern/bloc_pattern.dart';
 
 class AppBloc extends BlocBase {
+
+  //  Next
+
   int _nextText = 0;
 
   final _text$ = BehaviorSubject<int>();
@@ -13,6 +16,9 @@ class AppBloc extends BlocBase {
     _nextText = next;
     _text$.add(_nextText);
   }
+
+
+  // Choices
 
   Map<String, dynamic> _choiceState;
 
