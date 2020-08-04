@@ -2,8 +2,7 @@ import 'package:rxdart/rxdart.dart';
 import 'package:bloc_pattern/bloc_pattern.dart';
 
 class AppBloc extends BlocBase {
-
-  //  Next
+  //  Next Narrative
 
   int _nextText = 0;
 
@@ -17,7 +16,6 @@ class AppBloc extends BlocBase {
     _text$.add(_nextText);
   }
 
-
   // Choices
 
   Map<String, dynamic> _choiceState;
@@ -26,11 +24,10 @@ class AppBloc extends BlocBase {
 
   Map<String, dynamic> get choiceValue => _choice$.value;
 
-  Stream<Map<String, dynamic>> get choiceState => _choice$.stream; 
+  Stream<Map<String, dynamic>> get choiceState => _choice$.stream;
 
   void setChoiceState(Map<String, dynamic> map) {
     _choiceState = map;
-
     _choice$.add(_choiceState);
   }
 

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:text_adventure_app/app/pages/widgets/choices.dart';
 import 'package:text_adventure_app/app/shared/global/app_bloc.dart';
 import 'package:text_adventure_app/app/shared/global/bloc_methods.dart';
-import 'package:text_adventure_app/app/shared/services/loadJsons.dart';
-import 'package:text_adventure_app/app/shared/services/loadVideo.dart';
-import 'package:text_adventure_app/app/shared/services/playerPrefs.dart';
-import 'package:text_adventure_app/app/shared/services/save_json.dart';
+import 'package:text_adventure_app/app/shared/utils/jsons_manager.dart';
+import 'package:text_adventure_app/app/shared/utils/loadVideo.dart';
+import 'package:text_adventure_app/app/shared/utils/playerPrefs.dart';
 import 'package:video_player/video_player.dart';
 import '../app_module.dart';
 
@@ -24,12 +24,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
   final SaveGame playerPrefs = SaveGame();
 
-  final JsonDataLocal _jsonDataLocal = JsonDataLocal();
-
   Future<void> initialize() async {
-    await _jsonDataLocal.saveHistoryInPrefs();
-    await jsonHistory.loadAdventure1();
-    // await videosControllers.initializeVideo();
+    await jsonHistory.loadAdventure(
+        file: 'assets/localJson/felipeAdventure.json');
+    await videosControllers.initializeVideo();
     await BlocMethods.readPlayerPrefs(context);
   }
 
@@ -63,7 +61,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: FlatButton(
                       padding: EdgeInsets.all(0),
                       child: Icon(Icons.clear),
-                      onPressed: () => _jsonDataLocal.getHistoryFromPrefs(),
+                      onPressed: () => playerPrefs.clearPrefs(),
                     ),
                   ),
                 ],
@@ -71,7 +69,7 @@ class _MyHomePageState extends State<MyHomePage> {
               Container(
                 margin: EdgeInsets.only(top: 30.0),
                 child: FutureBuilder(
-                  future: jsonHistory.loadAdventure1(),
+                  future: initialize(),
                   builder: (context, snapshot) {
                     switch (snapshot.connectionState) {
                       case ConnectionState.waiting:
@@ -93,7 +91,6 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-// Pega os valores do bloc, quem modifica são os Bloc Methods
   Widget aventura1(BuildContext context) {
     return StreamBuilder<int>(
       stream: AppModule.to.bloc<AppBloc>().nextText,
@@ -104,87 +101,44 @@ class _MyHomePageState extends State<MyHomePage> {
               child: ListView(
                 shrinkWrap: true,
                 children: <Widget>[
-                  Container(
-                    padding: EdgeInsets.all(10),
-                    margin: EdgeInsets.only(top: 10),
-                    child: SelectableText(
-                      jsonHistory.history.adventure[snapshot.data].text,
-                      style: TextStyle(
-                        fontSize: 17,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(15),
-                    child: Center(
-                      child: videosControllers.controller.value.initialized
-                          ? AspectRatio(
-                              aspectRatio: videosControllers
-                                  .controller.value.aspectRatio,
-                              child: VideoPlayer(
-                                videosControllers.controller,
-                              ),
-                            )
-                          : Container(),
-                    ),
-                  ),
+                  narrative(snapshot),
+                  videoOrImage(),
                 ],
               ),
             ),
-            StreamBuilder<Map<String, dynamic>>(
-                stream: AppModule.to.bloc<AppBloc>().choiceState,
-                builder: (context, snapshot) {
-                  return Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: GridView.count(
-                        primary: false,
-                        physics: null,
-                        childAspectRatio: 4.5,
-                        crossAxisCount: 1,
-                        shrinkWrap: true,
-                        // crossAxisSpacing: 20,
-                        mainAxisSpacing: 0,
-                        children: jsonHistory
-                            .history
-                            .adventure[(AppModule.to.bloc<AppBloc>().nextValue)]
-                            .options
-                            .map((item) => (item.requiredState == null ||
-                                    item.requiredState.toString() ==
-                                        snapshot.data.toString()
-                                ? FlatButton(
-                                    shape: RoundedRectangleBorder(
-                                      side: BorderSide(color: Colors.black),
-                                    ),
-                                    splashColor: Colors.amber[300],
-                                    padding: EdgeInsets.all(5),
-                                    child: Text(
-                                      item.text,
-                                      style: TextStyle(
-                                          fontSize: 16,
-                                          color: Colors.grey[850]),
-                                    ),
-                                    onPressed: () {
-                                      BlocMethods.changeAdventureState(context,
-                                          jsonHistory.history, item.index);
-                                    },
-                                  )
-                                : Container()))
-                            .toList()),
-                  );
-                }),
+            ChoicesWidget(jsonHistory: jsonHistory),
           ],
         );
       },
     );
   }
-}
 
-// Container(
-//   decoration: BoxDecoration(
-//     // image: DecorationImage(
-//     //   image: NetworkImage(
-//     //       "https://images-americanas.b2w.io/produtos/01/00/sku/43782/4/43782401_2SZ.jpg"),
-//     //   fit: BoxFit.cover,
-//     // ),
-//   ),
-// ),
+  Widget narrative(dynamic snapshot) {
+    return Container(
+      padding: EdgeInsets.all(10),
+      margin: EdgeInsets.only(top: 10),
+      child: SelectableText(
+        jsonHistory.adventureList.adventure[snapshot.data].text,
+        style: TextStyle(
+          fontSize: 17,
+        ),
+      ),
+    );
+  }
+
+  Widget videoOrImage() {
+    return Padding(
+      padding: EdgeInsets.all(15),
+      child: Center(
+        child: videosControllers.controller.value.initialized
+            ? AspectRatio(
+                aspectRatio: videosControllers.controller.value.aspectRatio,
+                child: VideoPlayer(
+                  videosControllers.controller,
+                ),
+              )
+            : Container(),
+      ),
+    );
+  }
+}
