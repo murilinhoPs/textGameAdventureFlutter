@@ -3,13 +3,21 @@ class AdventureList {
 
   AdventureList({this.adventure});
 
-  factory AdventureList.fromJson(List<dynamic> parsedJson) {
+  factory AdventureList.fromJson(Map<String, dynamic> json) {
     List<Adventure1> firstAdventure = new List<Adventure1>();
-    firstAdventure = parsedJson.map((i) => Adventure1.fromJson(i)).toList();
+    json['firstAdventure'].forEach((v) {
+      firstAdventure.add(new Adventure1.fromJson(v));
+    });
 
-    return AdventureList(
-      adventure: firstAdventure,
-    );
+    return AdventureList(adventure: firstAdventure);
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (this.adventure != null) {
+      data['firstAdventure'] = this.adventure.map((v) => v.toJson()).toList();
+    }
+    return data;
   }
 }
 
@@ -25,6 +33,16 @@ class Adventure1 {
     List<Options> optionsList = list.map((i) => Options.fromJson(i)).toList();
 
     return Adventure1(id: json['id'], text: json['text'], options: optionsList);
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['text'] = this.text;
+    if (this.options != null) {
+      data['options'] = this.options.map((v) => v.toJson()).toList();
+    }
+    return data;
   }
 }
 
@@ -49,5 +67,16 @@ class Options {
         nextText: json['nextText'],
         setState: json['setState'],
         requiredState: json['requiredState']);
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['index'] = this.index;
+    data['text'] = this.text;
+    data['nextText'] = this.nextText;
+    if (this.setState != null) data['setState'] = this.setState;
+
+    if (this.requiredState != null) data['requiredState'] = this.requiredState;
+    return data;
   }
 }

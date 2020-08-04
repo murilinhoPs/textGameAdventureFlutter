@@ -5,6 +5,7 @@ import 'package:text_adventure_app/app/shared/global/bloc_methods.dart';
 import 'package:text_adventure_app/app/shared/services/loadJsons.dart';
 import 'package:text_adventure_app/app/shared/services/loadVideo.dart';
 import 'package:text_adventure_app/app/shared/services/playerPrefs.dart';
+import 'package:text_adventure_app/app/shared/services/save_json.dart';
 import 'package:video_player/video_player.dart';
 import '../app_module.dart';
 
@@ -17,15 +18,18 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final Aventura1Json jsonHistory = Aventura1Json();
+  final AdventureJson jsonHistory = AdventureJson();
 
   final VideosAssets videosControllers = VideosAssets();
 
   final SaveGame playerPrefs = SaveGame();
 
+  final JsonDataLocal _jsonDataLocal = JsonDataLocal();
+
   Future<void> initialize() async {
+    await _jsonDataLocal.saveHistoryInPrefs();
     await jsonHistory.loadAdventure1();
-    await videosControllers.initializeVideo();
+    // await videosControllers.initializeVideo();
     await BlocMethods.readPlayerPrefs(context);
   }
 
@@ -59,7 +63,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: FlatButton(
                       padding: EdgeInsets.all(0),
                       child: Icon(Icons.clear),
-                      onPressed: () => playerPrefs.clearPrefs(),
+                      onPressed: () => _jsonDataLocal.getHistoryFromPrefs(),
                     ),
                   ),
                 ],
@@ -104,7 +108,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     padding: EdgeInsets.all(10),
                     margin: EdgeInsets.only(top: 10),
                     child: SelectableText(
-                      jsonHistory.history.adventure[(snapshot.data)].text,
+                      jsonHistory.history.adventure[snapshot.data].text,
                       style: TextStyle(
                         fontSize: 17,
                       ),
@@ -135,8 +139,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: GridView.count(
                         primary: false,
                         physics: null,
-                        childAspectRatio:
-                            MediaQuery.of(context).size.height * 0.00991,
+                        childAspectRatio: 4.5,
                         crossAxisCount: 1,
                         shrinkWrap: true,
                         // crossAxisSpacing: 20,
@@ -153,7 +156,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                       side: BorderSide(color: Colors.black),
                                     ),
                                     splashColor: Colors.amber[300],
-                                    padding: EdgeInsets.all(10),
+                                    padding: EdgeInsets.all(5),
                                     child: Text(
                                       item.text,
                                       style: TextStyle(

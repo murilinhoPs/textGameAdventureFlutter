@@ -1,9 +1,8 @@
 import 'package:video_player/video_player.dart';
 
 class VideosAssets {
-
   VideoPlayerController controller =
-      VideoPlayerController.asset('videos/desert.mp4');
+      VideoPlayerController.asset('assets/videos/desert.mp4');
 
   Future<void> initializeVideo() async {
     await controller.initialize().then((_) {
