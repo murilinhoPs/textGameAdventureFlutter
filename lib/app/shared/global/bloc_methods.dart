@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:text_adventure_app/app/shared/global/app_bloc.dart';
 import 'package:text_adventure_app/app/shared/models/model.dart';
@@ -34,10 +35,12 @@ class BlocMethods {
     _playerPrefs.save(appBloc.nextValue);
   }
 
-  static void verifyChoiceStates({Options options, AsyncSnapshot snapshot}) {
+  static bool verifyChoiceStates({Options options, AsyncSnapshot snapshot}) {
     print("requiredstate: ${options.requiredState}");
 
     if (options.requiredState != null)
-      appBloc.verifyRequiredStateKeys(options, snapshot);
+      return appBloc.verifyRequiredStateKeys(options, snapshot);
+    else
+      return false;
   }
 }

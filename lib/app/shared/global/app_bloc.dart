@@ -6,7 +6,6 @@ import 'package:text_adventure_app/app/shared/models/model.dart';
 class AppBloc extends BlocBase {
   AppBloc() {
     _text$.add(_nextText);
-    _requiredState$.add(_requiredStateKeys);
   }
 
   //  Next Narrative
@@ -40,9 +39,6 @@ class AppBloc extends BlocBase {
     _choice$.add(map);
     _choiceState = newChoiceState;
 
-    // print("choiceSubject: ${_choice$.value}");
-    // print(_choiceState.toSet().toList().toString());
-
     // _choiceState.clear();
   }
 
@@ -50,24 +46,16 @@ class AppBloc extends BlocBase {
 
   bool _requiredStateKeys = false;
 
-  final _requiredState$ = BehaviorSubject<bool>();
-
-  Stream<bool> get requiredStateKeys => _requiredState$.stream;
-
   bool verifyRequiredStateKeys(
       Options options, AsyncSnapshot<Map<String, dynamic>> snapshot) {
     List<String> mapKeyToList =
         options.requiredState.keys.map((value) => value).toList();
 
     for (var listKey in mapKeyToList) {
-      print("contains: ${snapshot.data.containsKey(listKey)}");
-
       snapshot.data.containsKey(listKey)
           ? _requiredStateKeys = true
           : _requiredStateKeys = false;
     }
-
-    _requiredState$.add(_requiredStateKeys);
 
     return _requiredStateKeys;
   }

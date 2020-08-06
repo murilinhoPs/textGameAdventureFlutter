@@ -17,63 +17,45 @@ class ChoicesWidget extends StatefulWidget {
 
 class _ChoicesWidgetState extends State<ChoicesWidget> {
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return StreamBuilder(
         stream: AppModule.to.bloc<AppBloc>().choiceState,
         builder: (context, choiceStateSnapshot) {
           return Padding(
             padding: const EdgeInsets.all(10.0),
-            child: StreamBuilder<bool>(
-                stream: AppModule.to.bloc<AppBloc>().requiredStateKeys,
-                builder: (context, requiredStateSnapshot) {
-                  return GridView.count(
-                    primary: false,
-                    physics: null,
-                    childAspectRatio: 4.5,
-                    crossAxisCount: 1,
-                    shrinkWrap: true,
-                    // crossAxisSpacing: 20,
-                    mainAxisSpacing: 0,
-                    children: choicesButtons(
-                        choiceStateSnapshot, requiredStateSnapshot),
-                  );
-                }),
+            child: GridView.count(
+              primary: false,
+              physics: null,
+              childAspectRatio: 4.5,
+              crossAxisCount: 1,
+              shrinkWrap: true,
+              // crossAxisSpacing: 20,
+              mainAxisSpacing: 0,
+              children: choicesButtons(choiceStateSnapshot),
+            ),
           );
         });
   }
 
-  choicesButtons(AsyncSnapshot<Map<String, dynamic>> choiceStateSnapshot,
-      AsyncSnapshot<bool> requiredStateSnapshot) {
-    return widget.jsonHistory.adventureList
-        .adventure[AppModule.to.bloc<AppBloc>().nextValue].options
-        .map(
+  choicesButtons(AsyncSnapshot<Map<String, dynamic>> choiceStateSnapshot) {
+    var adventureOptions = widget.jsonHistory.adventureList
+        .adventure[AppModule.to.bloc<AppBloc>().nextValue].options;
+
+    return adventureOptions.map(
       (options) {
-        if (options.requiredState != null) {
-          print("currentState: ${options.requiredState}");
-        }
-
-//flutter: [{sword: true}, {sword: false, torch: true}, {blood: false}, {blood: true}, {sword: false, fim: true}]
-
         if (options.requiredState == null) {
-          return choiceButtons(context, options, choiceStateSnapshot);
+          return choiceButton(context, options);
         } else {
-          BlocMethods.verifyChoiceStates(
-              options: options, snapshot: choiceStateSnapshot);
-
-          return requiredStateSnapshot.data
-              ? choiceButtons(context, options, choiceStateSnapshot)
+          return BlocMethods.verifyChoiceStates(
+                  options: options, snapshot: choiceStateSnapshot)
+              ? choiceButton(context, options)
               : Container();
         }
       },
     ).toList();
   }
 
-  Widget choiceButtons(context, Options item, AsyncSnapshot snapshot) {
+  Widget choiceButton(context, Options item) {
     return FlatButton(
       shape: RoundedRectangleBorder(
         side: BorderSide(color: Colors.black),

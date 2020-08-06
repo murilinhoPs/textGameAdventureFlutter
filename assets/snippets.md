@@ -21,3 +21,7 @@ Flutter - Dart
 item.requiredState.toString() == snapshot.data.toString()
 
 ```
+
+##### Como está meu Map<String,dynamic>
+
+> flutter: [{sword: true}, {sword: false, torch: true}, {blood: false}, {blood: true}, {sword: false, fim: true}]
