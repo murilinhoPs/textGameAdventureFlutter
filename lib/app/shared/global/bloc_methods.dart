@@ -35,10 +35,7 @@ class BlocMethods {
     _playerPrefs.save(appBloc.nextValue);
   }
 
-  static bool verifyChoiceStates({Options options, AsyncSnapshot snapshot}) {
-    if (options.requiredState != null)
+  static bool verifyChoiceStates({@required Options options,@required AsyncSnapshot snapshot}) {
       return appBloc.verifyRequiredStateKeys(options, snapshot);
-    else
-      return false;
   }
 }

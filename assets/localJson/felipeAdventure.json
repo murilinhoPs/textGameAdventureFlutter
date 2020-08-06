@@ -105,7 +105,16 @@
     {
       "id": 5,
       "text": "Você não aguenta os ferimentos em seu braço e desmaia antes de alcançar seu vilarejo [GAME OVER]",
-      "options": []
+      "options": [
+        {
+          "index": 0,
+          "text": "Resetar.",
+          "setState": {
+            "fim": true
+          },
+          "nextText": 1
+        }
+      ]
     },
     {
       "id": 6,
