@@ -9,7 +9,6 @@ class SaveGame {
     final prefs = await SharedPreferences.getInstance();
 
     final value = prefs.setInt(key, nextText);
-    print('savePrefs: $value');
 
     return value;
   }
@@ -18,7 +17,6 @@ class SaveGame {
     final prefs = await SharedPreferences.getInstance();
 
     final value = prefs.getInt(key) ?? 0;
-    print('readPrefs: $value');
 
     readValue = value;
 

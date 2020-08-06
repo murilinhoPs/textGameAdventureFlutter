@@ -9,7 +9,7 @@ import '../models/model.dart';
 class AdventureJson {
   AdventureList adventureList;
 
-  final String jsonKey = "gameHistory";
+  final String jsonKey = 'gameHistory';
 
   Future<String> _loadJsonAsset(String json) async {
     return await rootBundle.loadString(json);

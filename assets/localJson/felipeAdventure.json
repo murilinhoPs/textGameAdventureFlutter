@@ -16,7 +16,8 @@
           "index": 1,
           "text": "Vai investigar o som com uma tocha.",
           "setState": {
-            "sword": false
+            "sword": false,
+            "torch": true
           },
           "nextText": 3
         },
@@ -72,6 +73,14 @@
             "blood": true
           },
           "nextText": 5
+        },
+        {
+          "index": 2,
+          "text": "Adentar a caverna mais próxima e se cuidar",
+          "requiredState": {
+            "torch": true
+          },
+          "nextText": 7
         }
       ]
     },
@@ -83,6 +92,13 @@
           "index": 0,
           "text": "Resetar",
           "nextText": 1
+        },
+        {
+          "index": 1,
+          "text": " TESTE.",
+          "requiredState": {
+            "sword": true
+          }
         }
       ]
     },
@@ -100,6 +116,20 @@
           "text": "Resetar.",
           "setState": {
             "blood": true
+          },
+          "nextText": 1
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "text": " [FIM CAVERNA].",
+      "options": [
+        {
+          "index": 0,
+          "text": "Resetar.",
+          "setState": {
+            "fim": true
           },
           "nextText": 1
         }

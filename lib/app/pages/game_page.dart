@@ -27,7 +27,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<void> initialize() async {
     await jsonHistory.loadAdventure(
         file: 'assets/localJson/felipeAdventure.json');
-    await videosControllers.initializeVideo();
+    //videosControllers.initializeVideo();
     await BlocMethods.readPlayerPrefs(context);
   }
 
@@ -95,6 +95,8 @@ class _MyHomePageState extends State<MyHomePage> {
     return StreamBuilder<int>(
       stream: AppModule.to.bloc<AppBloc>().nextText,
       builder: (context, snapshot) {
+        if (!snapshot.hasData) return Container();
+
         return Column(
           children: <Widget>[
             Container(
@@ -102,7 +104,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 shrinkWrap: true,
                 children: <Widget>[
                   narrative(snapshot),
-                  videoOrImage(),
+                  //videoOrImage(),
                 ],
               ),
             ),

@@ -4,11 +4,11 @@ class VideosAssets {
   VideoPlayerController controller =
       VideoPlayerController.asset('assets/videos/desert.mp4');
 
-  Future<void> initializeVideo() async {
+  initializeVideo() {
     controller.initialize().then((_) {
-      controller.play();
       controller.setLooping(true);
       controller.setVolume(0.5);
+      controller.play();
     });
   }
 }

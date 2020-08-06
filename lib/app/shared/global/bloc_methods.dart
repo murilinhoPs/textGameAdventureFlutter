@@ -17,21 +17,27 @@ class BlocMethods {
     appBloc.setNextText(_playerPrefs.readValue);
   }
 
-  static void changeAdventureState(
-      BuildContext context, AdventureList history, int itemIndex) {
-    if (history.adventure[appBloc.nextValue].options[itemIndex].setState !=
-        null) {
-      appBloc.setChoiceState(
-          history.adventure[appBloc.nextValue].options[itemIndex].setState);
-    }
+  static void changeAdventureState({
+    AdventureList history,
+    int itemIndex,
+  }) {
+    var optionsValue = history.adventure[appBloc.nextValue].options[itemIndex];
 
     if (appBloc.nextValue < history.adventure.length) {
-      appBloc.setNextText(
-          history.adventure[appBloc.nextValue].options[itemIndex].nextText - 1);
-    } else {
+      appBloc.setNextText(optionsValue.nextText - 1);
+    } else
       appBloc.setNextText(0);
-    }
+
+    if (optionsValue.setState != null)
+      appBloc.setChoiceState(optionsValue.setState);
 
     _playerPrefs.save(appBloc.nextValue);
+  }
+
+  static void verifyChoiceStates({Options options, AsyncSnapshot snapshot}) {
+    print("requiredstate: ${options.requiredState}");
+
+    if (options.requiredState != null)
+      appBloc.verifyRequiredStateKeys(options, snapshot);
   }
 }
