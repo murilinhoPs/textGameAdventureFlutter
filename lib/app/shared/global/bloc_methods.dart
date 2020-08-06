@@ -36,8 +36,6 @@ class BlocMethods {
   }
 
   static bool verifyChoiceStates({Options options, AsyncSnapshot snapshot}) {
-    print("requiredstate: ${options.requiredState}");
-
     if (options.requiredState != null)
       return appBloc.verifyRequiredStateKeys(options, snapshot);
     else
