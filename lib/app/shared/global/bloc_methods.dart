@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:text_adventure_app/app/shared/global/app_bloc.dart';
+import 'package:text_adventure_app/app/pages/bloc/choices_required_state.dart';
+import 'package:text_adventure_app/app/pages/bloc/choices_state.dart';
+import 'package:text_adventure_app/app/pages/bloc/narrative_text.dart';
 import 'package:text_adventure_app/app/shared/models/model.dart';
 import 'package:text_adventure_app/app/shared/utils/playerPrefs.dart';
 
@@ -8,34 +10,37 @@ import '../../app_module.dart';
 
 // SET BLOC Values - COMUNICAÇÃO entre a View e o Bloc
 class BlocMethods {
-  static final SaveGame _playerPrefs = SaveGame();
+  final SaveGame _playerPrefs = SaveGame();
 
-  static final appBloc = AppModule.to.bloc<AppBloc>();
+  final _narrativeTextBloc = AppModule.to.bloc<NarrativeTextBloc>();
 
-  static Future<void> readPlayerPrefs(BuildContext context) async {
+  final _choiceStateBloc = AppModule.to.bloc<ChoiceStateBloc>();
+
+  final _choicesRequiredState = AppModule.to.getDependency<ChoicesRequiredState>();
+
+  Future<void> readPlayerPrefs(BuildContext context) async {
     await _playerPrefs.read();
 
-    appBloc.setNextText(_playerPrefs.readValue);
+    _narrativeTextBloc.setNextNarrativeText(_playerPrefs.readValue);
   }
 
-  static void changeAdventureState({
+  void changeAdventureState({
     AdventureList history,
     int itemIndex,
   }) {
-    var optionsValue = history.adventure[appBloc.nextValue].options[itemIndex];
+    var optionsValue = history.adventure[_narrativeTextBloc.nextValue].options[itemIndex];
 
-    if (appBloc.nextValue < history.adventure.length) {
-      appBloc.setNextText(optionsValue.nextText - 1);
+    if (_narrativeTextBloc.nextValue < history.adventure.length) {
+      _narrativeTextBloc.setNextNarrativeText(optionsValue.nextText - 1);
     } else
-      appBloc.setNextText(0);
+      _narrativeTextBloc.setNextNarrativeText(0);
 
-    if (optionsValue.setState != null)
-      appBloc.setChoiceState(optionsValue.setState);
+    if (optionsValue.setState != null) _choiceStateBloc.setChoiceState(optionsValue.setState);
 
-    _playerPrefs.save(appBloc.nextValue);
+    _playerPrefs.save(_narrativeTextBloc.nextValue);
   }
 
-  static bool verifyChoiceStates({@required Options options,@required AsyncSnapshot snapshot}) {
-      return appBloc.verifyRequiredStateKeys(options, snapshot);
+  bool verifyChoiceStates({@required Options options, @required AsyncSnapshot snapshot}) {
+    return _choicesRequiredState.verifyRequiredStateKeys(options, snapshot);
   }
 }

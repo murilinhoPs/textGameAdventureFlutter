@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:text_adventure_app/app/pages/bloc/narrative_text.dart';
 import 'package:text_adventure_app/app/pages/widgets/choices.dart';
-import 'package:text_adventure_app/app/shared/global/app_bloc.dart';
 import 'package:text_adventure_app/app/shared/global/bloc_methods.dart';
 import 'package:text_adventure_app/app/shared/utils/jsons_manager.dart';
 import 'package:text_adventure_app/app/shared/utils/loadVideo.dart';
@@ -24,11 +24,12 @@ class _MyHomePageState extends State<MyHomePage> {
 
   final SaveGame playerPrefs = SaveGame();
 
+  final blocMethods = AppModule.to.getDependency<BlocMethods>();
+
   Future<void> initialize() async {
-    await jsonHistory.loadAdventure(
-        file: 'assets/localJson/felipeAdventure.json');
+    await jsonHistory.loadAdventure(file: 'assets/localJson/felipeAdventure.json');
     //videosControllers.initializeVideo();
-    await BlocMethods.readPlayerPrefs(context);
+    await blocMethods.readPlayerPrefs(context);
   }
 
   @override
@@ -93,7 +94,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Widget aventura1(BuildContext context) {
     return StreamBuilder<int>(
-      stream: AppModule.to.bloc<AppBloc>().nextText,
+      stream: AppModule.to.bloc<NarrativeTextBloc>().nextNarrativeText,
       builder: (context, snapshot) {
         if (!snapshot.hasData) return Container();
 

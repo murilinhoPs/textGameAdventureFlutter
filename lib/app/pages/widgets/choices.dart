@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:text_adventure_app/app/pages/bloc/choices_state.dart';
+import 'package:text_adventure_app/app/pages/bloc/narrative_text.dart';
 import 'package:text_adventure_app/app/shared/models/model.dart';
 import 'package:text_adventure_app/app/shared/utils/jsons_manager.dart';
 
 import '../../app_module.dart';
-import '../../shared/global/app_bloc.dart';
 import '../../shared/global/bloc_methods.dart';
 
 class ChoicesWidget extends StatefulWidget {
@@ -16,10 +17,12 @@ class ChoicesWidget extends StatefulWidget {
 }
 
 class _ChoicesWidgetState extends State<ChoicesWidget> {
+  final blocMethods = AppModule.to.getDependency<BlocMethods>();
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-        stream: AppModule.to.bloc<AppBloc>().choiceState,
+        stream: AppModule.to.bloc<ChoiceStateBloc>().choiceState,
         builder: (context, choiceStateSnapshot) {
           return Padding(
             padding: const EdgeInsets.all(10.0),
@@ -39,16 +42,15 @@ class _ChoicesWidgetState extends State<ChoicesWidget> {
 
   choicesButtons(AsyncSnapshot<Map<String, dynamic>> choiceStateSnapshot) {
     var adventureOptions = widget.jsonHistory.adventureList
-        .adventure[AppModule.to.bloc<AppBloc>().nextValue].options;
+        .adventure[AppModule.to.bloc<NarrativeTextBloc>().nextValue].options;
 
     return adventureOptions.map(
-      (options) {
-        if (options.requiredState == null) {
-          return choiceButton(context, options);
+      (option) {
+        if (option.requiredState == null) {
+          return choiceButton(context, option);
         } else {
-          return BlocMethods.verifyChoiceStates(
-                  options: options, snapshot: choiceStateSnapshot)
-              ? choiceButton(context, options)
+          return blocMethods.verifyChoiceStates(options: option, snapshot: choiceStateSnapshot)
+              ? choiceButton(context, option)
               : Container();
         }
       },
@@ -67,7 +69,7 @@ class _ChoicesWidgetState extends State<ChoicesWidget> {
         style: TextStyle(fontSize: 16, color: Colors.grey[850]),
       ),
       onPressed: () {
-        BlocMethods.changeAdventureState(
+        blocMethods.changeAdventureState(
           history: widget.jsonHistory.adventureList,
           itemIndex: item.index,
         );
