@@ -38,19 +38,10 @@
       "options": [
         {
           "index": 0,
-          "text": " [FIM 1].",
+          "text": "fim",
           "requiredState": {
             "fim": true
           }
-        },
-        {
-          "index": 1,
-          "text": "Obrigado!"
-        },
-        {
-          "index": 2,
-          "text": "Tentar novamente!",
-          "nextText": 1
         }
       ]
     },
@@ -97,7 +88,7 @@
           "index": 1,
           "text": " TESTE.",
           "requiredState": {
-            "sword": true
+            "sword": false
           }
         }
       ]

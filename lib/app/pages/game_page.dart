@@ -99,17 +99,34 @@ class _MyHomePageState extends State<MyHomePage> {
         if (!snapshot.hasData) return Container();
 
         return Column(
-          children: <Widget>[
-            Container(
-              child: ListView(
-                shrinkWrap: true,
-                children: <Widget>[
-                  narrative(snapshot),
-                  //videoOrImage(),
-                ],
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            videoOrImage(),
+            Divider(
+              color: Color.fromRGBO(190, 185, 160, 1),
+              thickness: 4.0,
+              indent: 10.0,
+              endIndent: 10.0,
+            ),
+            Expanded(
+              child: Container(
+                margin: EdgeInsets.symmetric(horizontal: 16.0),
+                padding: EdgeInsets.all(8.0),
+                decoration: BoxDecoration(
+                  color: Color.fromRGBO(190, 185, 160, 1),
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(15.0),
+                  ),
+                ),
+                child: ListView(
+                  shrinkWrap: true,
+                  children: <Widget>[
+                    narrative(snapshot),
+                    ChoicesWidget(jsonHistory: jsonHistory),
+                  ],
+                ),
               ),
             ),
-            ChoicesWidget(jsonHistory: jsonHistory),
           ],
         );
       },
@@ -119,11 +136,10 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget narrative(dynamic snapshot) {
     return Container(
       padding: EdgeInsets.all(10),
-      margin: EdgeInsets.only(top: 10),
       child: SelectableText(
         jsonHistory.adventureList.adventure[snapshot.data].text,
         style: TextStyle(
-          fontSize: 17,
+          fontSize: 20,
         ),
       ),
     );
@@ -131,16 +147,24 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Widget videoOrImage() {
     return Padding(
-      padding: EdgeInsets.all(15),
-      child: Center(
-        child: videosControllers.controller.value.initialized
-            ? AspectRatio(
-                aspectRatio: videosControllers.controller.value.aspectRatio,
-                child: VideoPlayer(
-                  videosControllers.controller,
-                ),
-              )
-            : Container(),
+      padding: EdgeInsets.only(bottom: 1.0, top: 1.0),
+      child: Container(
+        width: MediaQuery.of(context).size.width,
+        height: 300,
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: NetworkImage(
+                'https://i.pinimg.com/564x/94/7b/ad/947badfba69962a84d80fa1e4afb55c2.jpg'),
+          ),
+        ),
+        // videosControllers.controller.value.initialized
+        //     ? AspectRatio(
+        //         aspectRatio: videosControllers.controller.value.aspectRatio,
+        //         child: VideoPlayer(
+        //           videosControllers.controller,
+        //         ),
+        //       )
+        //     : Container(),
       ),
     );
   }
