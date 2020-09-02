@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:text_adventure_app/app/pages/bloc/narrative_text.dart';
+import 'package:text_adventure_app/app/pages/style/notebook_custom_clipper.dart';
 import 'package:text_adventure_app/app/pages/widgets/choices.dart';
-import 'package:text_adventure_app/app/pages/widgets/notebook_custom_paint.dart';
+import 'package:text_adventure_app/app/pages/style/notebook_custom_paint.dart';
 import 'package:text_adventure_app/app/shared/global/bloc_methods.dart';
 import 'package:text_adventure_app/app/shared/utils/jsons_manager.dart';
 import 'package:text_adventure_app/app/shared/utils/loadVideo.dart';
@@ -112,26 +113,31 @@ class _MyHomePageState extends State<MyHomePage> {
             Expanded(
               child: Container(
                 width: MediaQuery.of(context).size.width,
-                margin: EdgeInsets.symmetric(horizontal: 10.0),
-                padding: EdgeInsets.all(10.0),
+                margin: EdgeInsets.only(right: 20.0),
+                padding: EdgeInsets.all(15.0),
                 decoration: BoxDecoration(
-                  // color: Colors.white,
-                  // border: Border(
-                  //   left: BorderSide(color: Colors.grey, width: 1),
-                  // ),
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(15.0),
                     topRight: Radius.circular(15.0),
                   ),
                 ),
-                child: CustomPaint(
-                  painter: NotebookPainter(),
-                  child: ListView(
-                    shrinkWrap: true,
-                    children: <Widget>[
-                      narrative(snapshot),
-                      ChoicesWidget(jsonHistory: jsonHistory),
-                    ],
+                child: ClipPath(
+                  clipper: NotebookClipper(),
+                  child: CustomPaint(
+                    painter: NotebookPainter(),
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                        top: 22.0,
+                        left: 26.0,
+                      ),
+                      child: ListView(
+                        shrinkWrap: true,
+                        children: <Widget>[
+                          narrative(snapshot),
+                          ChoicesWidget(jsonHistory: jsonHistory),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
               ),

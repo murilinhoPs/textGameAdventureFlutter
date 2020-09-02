@@ -26,7 +26,7 @@ class _ChoicesWidgetState extends State<ChoicesWidget> {
         stream: AppModule.to.bloc<ChoiceStateBloc>().choiceState,
         builder: (context, choiceStateSnapshot) {
           return Container(
-            padding: const EdgeInsets.all(20.0),
+            padding: const EdgeInsets.only(top: 15.0),
             margin: EdgeInsets.only(top: 15.0),
             child: ListView(
               primary: false,
@@ -61,18 +61,13 @@ class _ChoicesWidgetState extends State<ChoicesWidget> {
 
   Widget choiceButton(context, Options item) {
     return FlatButton(
-      shape:
-          // RoundedRectangleBorder(
-          //   side: BorderSide(color: Colors.black),
-          // ),
-          Border(
-        top: BorderSide(
-          color: Colors.red[600],
-        ),
+      shape: Border(
+        top: BorderSide(color: Colors.redAccent[200], width: 2.5),
       ),
       splashColor: Colors.amber[300],
       padding: EdgeInsets.only(bottom: 25, top: 10.0),
       child: Container(
+        padding: const EdgeInsets.all(7.0),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.start,
@@ -80,13 +75,14 @@ class _ChoicesWidgetState extends State<ChoicesWidget> {
             Icon(
               Icons.remove,
               color: Colors.red[600],
+              size: 36.0,
             ),
             Container(
               padding: const EdgeInsets.only(
                 left: 10.0,
                 top: 3.0,
               ),
-              width: 300,
+              width: MediaQuery.of(context).size.width * 0.65,
               child: Text(
                 item.text,
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
