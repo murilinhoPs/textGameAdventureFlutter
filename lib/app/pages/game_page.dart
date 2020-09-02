@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:text_adventure_app/app/pages/bloc/narrative_text.dart';
 import 'package:text_adventure_app/app/pages/widgets/choices.dart';
+import 'package:text_adventure_app/app/pages/widgets/notebook_custom_paint.dart';
 import 'package:text_adventure_app/app/shared/global/bloc_methods.dart';
 import 'package:text_adventure_app/app/shared/utils/jsons_manager.dart';
 import 'package:text_adventure_app/app/shared/utils/loadVideo.dart';
@@ -103,27 +104,35 @@ class _MyHomePageState extends State<MyHomePage> {
           children: [
             videoOrImage(),
             Divider(
-              color: Color.fromRGBO(190, 185, 160, 1),
+              color: Colors.black45,
               thickness: 4.0,
               indent: 10.0,
               endIndent: 10.0,
             ),
             Expanded(
               child: Container(
-                margin: EdgeInsets.symmetric(horizontal: 16.0),
-                padding: EdgeInsets.all(8.0),
+                width: MediaQuery.of(context).size.width,
+                margin: EdgeInsets.symmetric(horizontal: 10.0),
+                padding: EdgeInsets.all(10.0),
                 decoration: BoxDecoration(
-                  color: Color.fromRGBO(190, 185, 160, 1),
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(15.0),
+                  // color: Colors.white,
+                  // border: Border(
+                  //   left: BorderSide(color: Colors.grey, width: 1),
+                  // ),
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(15.0),
+                    topRight: Radius.circular(15.0),
                   ),
                 ),
-                child: ListView(
-                  shrinkWrap: true,
-                  children: <Widget>[
-                    narrative(snapshot),
-                    ChoicesWidget(jsonHistory: jsonHistory),
-                  ],
+                child: CustomPaint(
+                  painter: NotebookPainter(),
+                  child: ListView(
+                    shrinkWrap: true,
+                    children: <Widget>[
+                      narrative(snapshot),
+                      ChoicesWidget(jsonHistory: jsonHistory),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -135,11 +144,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Widget narrative(dynamic snapshot) {
     return Container(
-      padding: EdgeInsets.all(10),
+      padding: EdgeInsets.only(left: 25, top: 25, right: 25),
       child: SelectableText(
         jsonHistory.adventureList.adventure[snapshot.data].text,
         style: TextStyle(
-          fontSize: 20,
+          fontSize: 22,
         ),
       ),
     );
@@ -149,8 +158,8 @@ class _MyHomePageState extends State<MyHomePage> {
     return Padding(
       padding: EdgeInsets.only(bottom: 1.0, top: 1.0),
       child: Container(
-        width: MediaQuery.of(context).size.width,
-        height: 300,
+        width: double.infinity,
+        height: MediaQuery.of(context).size.height * 0.397,
         decoration: BoxDecoration(
           image: DecorationImage(
             image: NetworkImage(

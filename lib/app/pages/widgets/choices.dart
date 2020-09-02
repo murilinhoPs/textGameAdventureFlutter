@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:text_adventure_app/app/pages/bloc/choices_state.dart';
 import 'package:text_adventure_app/app/pages/bloc/narrative_text.dart';
 import 'package:text_adventure_app/app/shared/models/model.dart';
@@ -24,17 +25,18 @@ class _ChoicesWidgetState extends State<ChoicesWidget> {
     return StreamBuilder(
         stream: AppModule.to.bloc<ChoiceStateBloc>().choiceState,
         builder: (context, choiceStateSnapshot) {
-          return Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: GridView.count(
+          return Container(
+            padding: const EdgeInsets.all(20.0),
+            margin: EdgeInsets.only(top: 15.0),
+            child: ListView(
               primary: false,
               physics: null,
-              childAspectRatio: 4.5,
-              crossAxisCount: 1,
               shrinkWrap: true,
-              // crossAxisSpacing: 20,
-              mainAxisSpacing: 0,
               children: choicesButtons(choiceStateSnapshot),
+              //childAspectRatio: 4.5,
+              //crossAxisCount: 1,
+              // crossAxisSpacing: 20,
+              //mainAxisSpacing: 1,
             ),
           );
         });
@@ -59,14 +61,39 @@ class _ChoicesWidgetState extends State<ChoicesWidget> {
 
   Widget choiceButton(context, Options item) {
     return FlatButton(
-      shape: RoundedRectangleBorder(
-        side: BorderSide(color: Colors.black),
+      shape:
+          // RoundedRectangleBorder(
+          //   side: BorderSide(color: Colors.black),
+          // ),
+          Border(
+        top: BorderSide(
+          color: Colors.red[600],
+        ),
       ),
       splashColor: Colors.amber[300],
-      padding: EdgeInsets.all(5),
-      child: Text(
-        item.text,
-        style: TextStyle(fontSize: 16, color: Colors.grey[850]),
+      padding: EdgeInsets.only(bottom: 25, top: 10.0),
+      child: Container(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Icon(
+              Icons.remove,
+              color: Colors.red[600],
+            ),
+            Container(
+              padding: const EdgeInsets.only(
+                left: 10.0,
+                top: 3.0,
+              ),
+              width: 300,
+              child: Text(
+                item.text,
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+            ),
+          ],
+        ),
       ),
       onPressed: () {
         blocMethods.changeAdventureState(
