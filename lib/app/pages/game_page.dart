@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:text_adventure_app/app/pages/bloc/narrative_text.dart';
 import 'package:text_adventure_app/app/pages/style/notebook_custom_clipper.dart';
 import 'package:text_adventure_app/app/pages/widgets/choices.dart';
@@ -12,9 +13,6 @@ import 'package:video_player/video_player.dart';
 import '../app_module.dart';
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
-  final String title;
-
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
@@ -26,12 +24,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
   final SaveGame playerPrefs = SaveGame();
 
-  final blocMethods = AppModule.to.getDependency<BlocMethods>();
-
   Future<void> initialize() async {
-    await jsonHistory.loadAdventure(file: 'assets/localJson/felipeAdventure.json');
+    await jsonHistory.loadAdventure(
+        file: 'assets/localJson/felipeAdventure.json');
     //videosControllers.initializeVideo();
-    await blocMethods.readPlayerPrefs(context);
+    await BlocProvider.of<BlocMethods>(context).readPlayerPrefs(context);
   }
 
   @override
