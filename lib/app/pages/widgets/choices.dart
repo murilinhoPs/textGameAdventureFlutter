@@ -48,13 +48,12 @@ class _ChoicesWidgetState extends State<ChoicesWidget> {
 
     return adventureOptions.map(
       (option) {
-        if (option.requiredState == null) {
+        if (option.requiredState == null ||
+            blocMethods.verifyChoiceStates(
+                options: option, snapshot: choiceStateSnapshot)) {
           return choiceButton(context, option);
-        } else {
-          return blocMethods.verifyChoiceStates(options: option, snapshot: choiceStateSnapshot)
-              ? choiceButton(context, option)
-              : Container();
         }
+        return Container();
       },
     ).toList();
   }

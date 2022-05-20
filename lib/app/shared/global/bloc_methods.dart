@@ -16,7 +16,8 @@ class BlocMethods {
 
   final _choiceStateBloc = AppModule.to.bloc<ChoiceStateBloc>();
 
-  final _choicesRequiredState = AppModule.to.getDependency<ChoicesRequiredState>();
+  final _choicesRequiredState =
+      AppModule.to.getDependency<ChoicesRequiredState>();
 
   Future<void> readPlayerPrefs(BuildContext context) async {
     await _playerPrefs.read();
@@ -28,19 +29,24 @@ class BlocMethods {
     AdventureList history,
     int itemIndex,
   }) {
-    var optionsValue = history.adventure[_narrativeTextBloc.nextValue].options[itemIndex];
+    var optionsValue =
+        history.adventure[_narrativeTextBloc.nextValue].options[itemIndex];
 
     if (_narrativeTextBloc.nextValue < history.adventure.length) {
       _narrativeTextBloc.setNextNarrativeText(optionsValue.nextText - 1);
     } else
       _narrativeTextBloc.setNextNarrativeText(0);
 
-    if (optionsValue.setState != null) _choiceStateBloc.setChoiceState(optionsValue.setState);
+    // SET the current choiceState for the current options
+    if (optionsValue.setState != null)
+      _choiceStateBloc.setChoiceState(optionsValue.setState);
 
     _playerPrefs.save(_narrativeTextBloc.nextValue);
   }
 
-  bool verifyChoiceStates({@required Options options, @required AsyncSnapshot snapshot}) {
+  // CHECK if the requiredState of the option has the correct requiredState
+  bool verifyChoiceStates(
+      {@required Options options, @required AsyncSnapshot snapshot}) {
     return _choicesRequiredState.verifyRequiredStateKeys(options, snapshot);
   }
 }
